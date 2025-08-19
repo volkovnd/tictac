@@ -83,9 +83,9 @@ const makeMove = (x: number, y: number) => {
   field.value[y]![x]! = isXTurn.value ? 'x' : 'o'
 
   if (history.value.length >= 4) {
-    const removePosition = history.value[0]!
+    const removePosition = clone(history.value[0]!)
 
-    history.value.unshift()
+    history.value.shift()
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
