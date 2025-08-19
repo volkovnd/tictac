@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div>Текущий ход: {{ isWhiteTurn ? 'Крестики' : 'Нолики' }}</div>
+    <div v-if="!isWinCombination">
+      Текущий ход: {{ isWhiteTurn ? 'Крестики' : 'Нолики' }}
+    </div>
 
-    <div v-if="!!isWinCombination">
+    <div v-else>
       Игра закончена
       <button @click="restart">
         restart
