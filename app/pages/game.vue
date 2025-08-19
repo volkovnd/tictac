@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!isWinCombination">
-      Текущий ход: {{ isWhiteTurn ? 'Крестики' : 'Нолики' }}
+      Текущий ход: {{ isXTurn ? 'Крестики' : 'Нолики' }}
     </div>
 
     <div v-else>
@@ -36,10 +36,9 @@
 </template>
 
 <script lang="ts" setup>
-const availableWinCombinations: Array<Array<{
-  x: number
-  y: number
-}>> = [
+import type { Field } from '~~/shared/types'
+
+const availableWinCombinations: Array<Array<Position>> = [
   Array.from({ length: 3 }, (_v, x) => ({
     x,
     y: x,
@@ -58,13 +57,15 @@ const availableWinCombinations: Array<Array<{
   }))),
 ]
 
-const getCleanField = () => Array.from({ length: 3 }, () => Array(3).fill(null))
+const getCleanField = (): Field => Array.from({ length: 3 }, () => Array(3).fill(null))
 
-const field = ref<Array<Array<'x' | 'o' | null>>>(getCleanField())
+const field = ref<Field>(getCleanField())
+
+const history = ref<Position[]>([])
 
 const currentTurnNumber = ref(0)
 
-const isWhiteTurn = computed(() => currentTurnNumber.value % 2 === 0)
+const isXTurn = computed(() => currentTurnNumber.value % 2 === 0)
 
 const isWinCombination = computed(() => {
   return availableWinCombinations.find((comb) => {
@@ -77,12 +78,28 @@ const isWinCombination = computed(() => {
 })
 
 const makeMove = (x: number, y: number) => {
-  if (field.value[y]![x]) return
+  if (field.value[y]![x]!) return
 
-  field.value[y]![x] = isWhiteTurn.value ? 'x' : 'o'
+  field.value[y]![x]! = isXTurn.value ? 'x' : 'o'
+
+  if (history.value.length >= 4) {
+    const removePosition = history.value[0]!
+
+    history.value.unshift()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    field.value[removePosition.y]![removePosition.x]! = null
+  }
 
   currentTurnNumber.value++
+
+  history.value.push({
+    x,
+    y,
+  })
 }
+
 const restart = () => {
   field.value = getCleanField()
 
@@ -91,9 +108,6 @@ const restart = () => {
 
 const isWinPoint = (x: number, y: number) => {
   return isWinCombination.value?.some(point => point.x === x && point.y === y)
-  // if (!isWin.value) return false
-//
-  // return isWin.value.some(point => point.x === x && point.y === y)
 }
 </script>
 
