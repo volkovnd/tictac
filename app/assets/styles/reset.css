@@ -1,0 +1,28 @@
+@import 'normalize.css';
+
+html {
+  font-family: Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+a,
+a:visited {
+  color: initial;
+  text-decoration: none;
+}

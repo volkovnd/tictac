@@ -32,6 +32,7 @@ export default defineNuxtConfig({
       ],
     },
   },
+  css: ['~/assets/styles/reset.css'],
   compatibilityDate: '2025-07-15',
   telemetry: { enabled: false },
   eslint: {
@@ -54,6 +55,7 @@ export default defineNuxtConfig({
         display: 'swap',
         provider: 'google',
         weights: [
+          300,
           400,
           500,
           700,
