@@ -36,6 +36,7 @@
 </template>
 
 <script lang="ts" setup>
+import { MAX_MOVES_BEFORE_DELETE } from '~/constants'
 import type { Field } from '~~/shared/types'
 
 const availableWinCombinations: Array<Array<Position>> = [
@@ -82,7 +83,7 @@ const makeMove = (x: number, y: number) => {
 
   field.value[y]![x]! = isXTurn.value ? 'x' : 'o'
 
-  if (history.value.length >= 4) {
+  if (history.value.length >= MAX_MOVES_BEFORE_DELETE) {
     const removePosition = clone(history.value[0]!)
 
     history.value.shift()
