@@ -36,29 +36,10 @@
 </template>
 
 <script lang="ts" setup>
-import { MAX_MOVES_BEFORE_DELETE } from '~/constants'
+import {
+  MAX_MOVES_BEFORE_DELETE, WIN_COMBINATIONS,
+} from '~/constants'
 import type { Field } from '~~/shared/types'
-
-const availableWinCombinations: Array<Array<Position>> = [
-  Array.from({ length: 3 }, (_v, x) => ({
-    x,
-    y: x,
-  })),
-  Array.from({ length: 3 }, (_v, x) => ({
-    x,
-    y: 2 - x,
-  })),
-  ...Array.from({ length: 3 }, (_v, x) => Array.from({ length: 3 }, (_v, y) => ({
-    x,
-    y,
-  }))),
-  ...Array.from({ length: 3 }, (_v, y) => Array.from({ length: 3 }, (_v, x) => ({
-    x,
-    y,
-  }))),
-]
-
-const getCleanField = (): Field => Array.from({ length: 3 }, () => Array(3).fill(null))
 
 const field = ref<Field>(getCleanField())
 
@@ -69,7 +50,7 @@ const currentTurnNumber = ref(0)
 const isXTurn = computed(() => currentTurnNumber.value % 2 === 0)
 
 const isWinCombination = computed(() => {
-  return availableWinCombinations.find((comb) => {
+  return WIN_COMBINATIONS.find((comb) => {
     const value = field.value[comb[0]!.y]![comb[0]!.x]!
 
     if (!value) return false
@@ -103,6 +84,8 @@ const makeMove = (x: number, y: number) => {
 
 const restart = () => {
   field.value = getCleanField()
+
+  history.value = []
 
   currentTurnNumber.value = 0
 }
